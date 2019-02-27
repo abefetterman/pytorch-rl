@@ -1,0 +1,1 @@
+from pytorch_rl.algos.vpg import VanillaPolicyGradient
