@@ -22,9 +22,6 @@ class VanillaPolicyGradient:
         self.buff = BatchBuffer()
         self.model = model
         
-    def reset(self):
-        self.buff.reset()
-        
     def get_action(self, obs):
         logits = self.model(tensorfy(obs))
         action = Categorical(logits=logits).sample()
@@ -49,6 +46,7 @@ class VanillaPolicyGradient:
             'batch_len': batch_len,
             'batch_rew': batch_rew
         }
+        self.buff.reset()
         
         return loss, info
         

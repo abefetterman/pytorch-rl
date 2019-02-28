@@ -1,15 +1,13 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.distributions.categorical import Categorical
 import gym
-import random
-import numpy as np
 
 from pytorch_rl.algos import VanillaPolicyGradient
 
-def train():
+def train(seed=None):
     env = gym.make('CartPole-v0')
+    if seed:
+        torch.manual_seed_all(seed)
     
     obs_dim = env.observation_space.shape[0]
     n_acts = env.action_space.n
@@ -29,7 +27,6 @@ def train():
     n_epochs = 100
     obs = env.reset()
     for itr in range(n_epochs):
-        algo.reset()
         while algo.need_data():
             action = algo.get_action(obs)
             step_result = env.step(action.item())
@@ -37,8 +34,7 @@ def train():
             obs,_,done,_ = step_result
             if done:
                 obs = env.reset()
-                
-        
+            
         loss, info = algo.train()
         optim.zero_grad()
         loss.backward()
